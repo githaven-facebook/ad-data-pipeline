@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# PyTest
+.pytest_cache/
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.py,cover
+nosetests.xml
+test-results/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Airflow
+logs/
+airflow.db
+airflow.cfg
+airflow_local_settings.py
+webserver_config.py
+unittests.cfg
+standalone_admin_password.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Distribution
+*.tar.gz
+*.whl
+
+# Spark
+derby.log
+metastore_db/
+
+# Docker
+.docker/
+
+# Local secrets
+*.env.local
+secrets/
+credentials/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Terraform / infra
+*.tfstate
+*.tfstate.backup
+.terraform/

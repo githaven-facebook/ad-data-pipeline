@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "ad-data-pipeline"
+version = "0.1.0"
+description = "Facebook Ad System Data Pipeline - Airflow-based ETL and analytics processing"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [
+    { name = "Priya Sharma", email = "priyasharma@fb.com" },
+]
+
+dependencies = [
+    "apache-airflow==2.8.1",
+    "apache-airflow-providers-amazon>=8.14.0",
+    "apache-airflow-providers-apache-spark>=4.3.0",
+    "boto3>=1.34.0",
+    "botocore>=1.34.0",
+    "pyarrow>=14.0.2",
+    "pandas>=2.1.4",
+    "pyspark>=3.5.0",
+    "pydantic>=2.5.3",
+    "pydantic-settings>=2.1.0",
+    "redis>=5.0.1",
+    "sqlalchemy>=2.0.25",
+    "statsd>=4.0.1",
+    "requests>=2.31.0",
+    "tenacity>=8.2.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.4",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "pytest-asyncio>=0.23.3",
+    "moto[s3]>=4.2.13",
+    "mypy>=1.8.0",
+    "flake8>=7.0.0",
+    "black>=23.12.1",
+    "isort>=5.13.2",
+    "pre-commit>=3.6.0",
+    "types-boto3>=1.0.2",
+    "types-requests>=2.31.0",
+    "pandas-stubs>=2.1.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.black]
+line-length = 120
+target-version = ["py310", "py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.venv
+  | _build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+known_first_party = ["ad_data_pipeline"]
+known_third_party = ["airflow", "boto3", "pydantic", "pyspark", "pandas", "pyarrow"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--tb=short",
+    "-v",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests requiring external services",
+    "slow: Slow tests that should be skipped in fast mode",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/conftest.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "pass",
+]
