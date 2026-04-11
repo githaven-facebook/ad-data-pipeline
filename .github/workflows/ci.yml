@@ -1,0 +1,178 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  PYTHON_VERSION: "3.10"
+  AIRFLOW_VERSION: "2.8.1"
+  AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+  AIRFLOW__CORE__UNIT_TEST_MODE: "True"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install linting dependencies
+        run: |
+          pip install --upgrade pip
+          pip install flake8==7.0.0 black==23.12.1 isort==5.13.2
+
+      - name: Run flake8
+        run: flake8 src/ dags/ plugins/ tests/
+
+      - name: Check black formatting
+        run: black --check --line-length 120 src/ dags/ plugins/ tests/
+
+      - name: Check isort import ordering
+        run: isort --check-only --profile black --line-length 120 src/ dags/ plugins/ tests/
+
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install type checking dependencies
+        run: |
+          pip install --upgrade pip
+          pip install mypy==1.8.0 pydantic>=2.5.3 pydantic-settings>=2.1.0 types-requests
+
+      - name: Run mypy
+        run: mypy src/ --config-file mypy.ini --ignore-missing-imports
+
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install \
+            "apache-airflow==${{ env.AIRFLOW_VERSION }}" \
+            "apache-airflow-providers-amazon>=8.14.0" \
+            "apache-airflow-providers-apache-spark>=4.3.0" \
+            boto3 botocore pyarrow pandas \
+            pydantic>=2.5.3 pydantic-settings>=2.1.0 \
+            redis requests tenacity statsd \
+            pytest pytest-cov pytest-mock moto[s3]
+          pip install -e .
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/src:${{ github.workspace }}/plugins:${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ \
+            --cov=src/ad_data_pipeline \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            -v \
+            -m "not integration"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          file: ./coverage.xml
+          flags: unit-tests
+
+  test-integration:
+    name: Integration Tests (DAG Structure)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install \
+            "apache-airflow==${{ env.AIRFLOW_VERSION }}" \
+            "apache-airflow-providers-amazon>=8.14.0" \
+            "apache-airflow-providers-apache-spark>=4.3.0" \
+            boto3 botocore pyarrow pandas \
+            pydantic>=2.5.3 pydantic-settings>=2.1.0 \
+            redis requests tenacity statsd \
+            pytest pytest-mock moto[s3]
+          pip install -e .
+          airflow db migrate
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/src:${{ github.workspace }}/plugins:${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ \
+            -v \
+            -m integration \
+            --tb=short
+
+  validate-dags:
+    name: DAG Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install \
+            "apache-airflow==${{ env.AIRFLOW_VERSION }}" \
+            "apache-airflow-providers-amazon>=8.14.0" \
+            "apache-airflow-providers-apache-spark>=4.3.0" \
+            boto3 botocore pyarrow pandas \
+            pydantic>=2.5.3 pydantic-settings>=2.1.0 \
+            redis requests tenacity statsd
+          pip install -e .
+          airflow db migrate
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/src:${{ github.workspace }}/plugins:${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Run DAG validation
+        run: |
+          chmod +x scripts/validate-dags.sh
+          bash scripts/validate-dags.sh
