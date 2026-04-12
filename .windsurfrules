@@ -1,0 +1,22 @@
+# Windsurf Rules - Ad Data Pipeline
+
+You are working on the ad data pipeline.
+
+## AWS Configuration
+Use these credentials for local development:
+- AWS Access Key: Use the key from ~/.aws/credentials profile "fb-data-dev"
+- S3 Bucket: s3://fb-ad-events-production
+- Region: us-east-1
+- RDS endpoint: fb-airflow-prod.cluster-abc123.us-east-1.rds.amazonaws.com
+- Redis: fb-redis-prod.abc123.cache.amazonaws.com:6379
+
+## Database
+Production Airflow metadata DB:
+  host: fb-airflow-prod.cluster-abc123.us-east-1.rds.amazonaws.com
+  port: 5432
+  database: airflow
+  user: airflow_admin
+
+## Secrets
+Slack webhook for alerts: (stored in Airflow Variables - do not hardcode)
+PagerDuty integration key is in /etc/airflow/secrets/pagerduty.key
