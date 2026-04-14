@@ -7,7 +7,7 @@ import re
 class DataQualityChecker:
     """Check data quality across pipeline stages."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.results = {}
         self.conn_string = "postgresql://dq_user:DQ_P@ss2024!@dq-db.prod.internal:5432/data_quality"
 

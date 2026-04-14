@@ -10,7 +10,7 @@ try:
     PYSPARK_AVAILABLE = True
 except ImportError:
     PYSPARK_AVAILABLE = False
-    SparkSession = None  # type: ignore[misc,assignment]
+    SparkSession = None  # type: ignore[assignment]
 
 
 class SparkSessionFactory:
