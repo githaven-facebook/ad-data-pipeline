@@ -71,7 +71,6 @@ def s3_hot_cold_tiering_dag() -> None:
         Returns list of partition metadata dicts with size, age, and access counts.
         """
         import boto3
-        from datetime import timezone
 
         logical_date = context["logical_date"]
         logger.info("Scanning partition metadata as of %s", logical_date.date())
@@ -119,8 +118,6 @@ def s3_hot_cold_tiering_dag() -> None:
 
         Uses age and access frequency to determine target tier.
         """
-        from datetime import date
-
         logical_date = context["logical_date"]
         reference_date = logical_date.date()
 

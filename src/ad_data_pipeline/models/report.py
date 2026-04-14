@@ -2,7 +2,7 @@
 
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -134,5 +134,3 @@ class AdvertiserReport(BaseModel):
             datetime: lambda v: v.isoformat(),
             date: lambda v: v.isoformat(),
         }
-
-
