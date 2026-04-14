@@ -12,16 +12,15 @@ Flow:
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Any
 
-from airflow.decorators import dag, task, task_group
+from airflow.decorators import dag, task
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.utils.dates import days_ago
 from airflow.utils.trigger_rule import TriggerRule
 
-from plugins.operators.data_quality_operator import DataQualityCheck, DataQualityOperator
 from plugins.sensors.s3_partition_sensor import S3PartitionReadinessSensor
 
 logger = logging.getLogger(__name__)
@@ -229,7 +228,7 @@ def s3_partitioning_dag() -> None:
     branch = check_has_work(validation_result)
     repartition_result = repartition_data(validation_result)
     verify_result = verify_output()
-    update_metadata = update_partition_metadata(verify_result)
+    update_partition_metadata(verify_result)
 
     wait_for_raw_data >> specs
     branch >> [repartition_result, all_partitions_done]

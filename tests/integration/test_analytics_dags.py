@@ -40,7 +40,6 @@ class TestUserSegmentationDagStructure:
 
     def test_dag_has_sla_configured(self) -> None:
         from dags.analytics.user_segmentation_dag import user_segmentation_daily
-        from datetime import timedelta
         # Check SLA is set via default_args on tasks
         extract_task = user_segmentation_daily.get_task("extract_user_features")
         assert extract_task is not None

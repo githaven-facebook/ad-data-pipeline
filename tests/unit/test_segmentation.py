@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-
 import pytest
 
 from ad_data_pipeline.transformations.segmentation import (

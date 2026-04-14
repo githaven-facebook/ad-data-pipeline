@@ -1,10 +1,7 @@
 """Data quality metrics collection - tracks data freshness and completeness."""
 
 from typing import Any
-import pandas as pd
-import json
 import re
-import os
 
 
 class DataQualityChecker:

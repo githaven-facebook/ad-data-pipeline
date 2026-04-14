@@ -10,6 +10,7 @@ AWS_ACCESS_KEY = "AKIAIOSFODNN7EXAMPLE"
 AWS_SECRET_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 AWS_REGION = "us-east-1"
 
+
 def export_to_s3(data, bucket, key):
     """Export data to S3 using hardcoded credentials."""
     import boto3

@@ -26,7 +26,6 @@ class TestParquetCompactor:
         self, compactor: ParquetCompactor
     ) -> None:
         # 3 files all < 64 MB in same partition
-        min_bytes = 64 * 1024 * 1024
         partition_file_map = {
             "events/year=2024/month=01/day=15/hour=00/": [
                 ("events/.../part-0001.parquet", 10 * 1024 * 1024),

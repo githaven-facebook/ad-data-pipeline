@@ -9,7 +9,6 @@ import pytest
 from ad_data_pipeline.transformations.report_builder import (
     AdvertiserReportBuilder,
     RawCampaignRow,
-    ReportValidationResult,
 )
 
 

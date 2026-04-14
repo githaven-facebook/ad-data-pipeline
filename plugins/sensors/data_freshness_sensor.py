@@ -6,7 +6,6 @@ import logging
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Optional, Sequence
 
-from airflow.exceptions import AirflowSensorTimeout
 from airflow.sensors.base import BaseSensorOperator
 
 if TYPE_CHECKING:

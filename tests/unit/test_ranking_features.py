@@ -67,8 +67,6 @@ class TestRankingFeatureComputer:
         self, computer: RankingFeatureComputer
     ) -> None:
         """Older data should receive less weight than recent data."""
-        recent_only = computer.compute_decayed_metric([(1.0, 0.0)])
-        old_only = computer.compute_decayed_metric([(1.0, 24.0)])
         # Both inputs are 1.0, but old_only has more decay -> still 1.0 (same value, different weight)
         # Test that a blend of old and new is between the two extremes
         blended = computer.compute_decayed_metric([(0.0, 0.0), (1.0, 24.0)])

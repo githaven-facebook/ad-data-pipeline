@@ -1,10 +1,9 @@
 """User segmentation logic: compute user features and assign segments."""
 
 import logging
-import math
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -127,8 +126,6 @@ class UserSegmentationEngine:
         Returns:
             Tier label string
         """
-        total = recency + frequency + monetary
-
         if recency >= 4 and frequency >= 4 and monetary >= 4:
             return "champions"
         elif frequency >= 4 and monetary >= 4:

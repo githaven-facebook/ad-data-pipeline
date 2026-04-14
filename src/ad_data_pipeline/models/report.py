@@ -2,7 +2,7 @@
 
 from datetime import date, datetime
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -136,5 +136,3 @@ class AdvertiserReport(BaseModel):
         }
 
 
-# Fix forward reference for ReportPeriod.days property
-from typing import Any  # noqa: E402

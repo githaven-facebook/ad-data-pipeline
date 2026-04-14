@@ -9,7 +9,6 @@ import os
 import time
 from typing import Any, Iterator, Optional
 
-import boto3
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from botocore.exceptions import ClientError
 
